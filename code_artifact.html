@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="ka" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF5500">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MotoMarket">
+    <link rel="manifest" id="pwa-manifest-link">
+    <title>MOTO MARKET & SERVICE | მოტო საბურავები, ნაწილები და სახელოსნო</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Noto Sans Georgian -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans Georgian"', 'sans-serif'],
+                    },
+                    colors: {
+                        moto: {
+                            orange: '#FF5500',
+                            dark: '#0F141C',
+                            card: '#18202C',
+                            border: '#263244',
+                            accent: '#FFC700'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans Georgian', sans-serif;
+            background-color: #0b0f17;
+            color: #f1f5f9;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F141C;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #263244;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF5500;
+        }
+        .vip-gradient {
+            background: linear-gradient(135deg, #FF5500 0%, #FF8800 100%);
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px -8px rgba(255, 85, 0, 0.25);
+            border-color: rgba(255, 85, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-moto-orange selection:text-white">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-gradient-to-r from-moto-orange via-orange-600 to-amber-600 text-white text-xs sm:text-sm py-2 px-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-4">
+                <span class="font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot"></i> თბილისი, დიდი დიღომი
+                </span>
+                <span class="hidden md:inline-block opacity-80">|</span>
+                <span class="hidden md:inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock"></i> ყოველდღე: 10:00 - 20:00
+                </span>
+            </div>
+            <div class="flex items-center space-x-4 ml-auto">
+                <a href="tel:511440415" class="font-extrabold bg-black/25 hover:bg-black/40 px-3 py-1 rounded-full transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-phone-volume animate-pulse"></i> 511 44 04 15
+                </a>
+                <button onclick="openInstallModal()" class="bg-white text-moto-orange hover:bg-orange-50 px-3 py-1 rounded-full text-xs font-extrabold transition flex items-center gap-1 shadow">
+                    <i class="fa-solid fa-mobile-screen-button"></i> აპის გადმოწერა
+                </button>
+                <button onclick="toggleAdminPanel()" class="bg-white/15 hover:bg-white/25 px-3 py-1 rounded-full text-xs font-semibold transition flex items-center gap-1">
+                    <i class="fa-solid fa-sliders"></i> მართვის პანელი (<span id="adminBookingCount">0</span>)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER (MyMarket Style) -->
+    <header class="sticky top-0 z-40 bg-moto-dark/95 backdrop-blur-md border-b border-moto-border shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                
+                <!-- Brand Logo -->
+                <div onclick="switchTab('market')" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-12 h-12 rounded-2xl vip-gradient flex items-center justify-center shadow-lg shadow-moto-orange/30 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-motorcycle text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl sm:text-2xl font-black tracking-tight text-white">MOTO<span class="text-moto-orange">MARKET</span></span>
+                            <span class="bg-moto-orange/20 text-moto-orange border border-moto-orange/40 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">GE</span>
+                        </div>
+                        <p class="text-xs text-slate-400">სახელოსნო • საბურავები • ნაწილები</p>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-xl mx-auto w-full order-3 lg:order-2">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            oninput="handleSearch()"
+                            placeholder="ძებნა: მაგ. 180/55 R17, Michelin, Motul 7100, ხუნდები..." 
+                            class="w-full pl-11 pr-24 py-3 bg-moto-card border border-moto-border focus:border-moto-orange rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-moto-orange/30 transition"
+                        >
+                        <button onclick="clearSearch()" id="clearSearchBtn" class="hidden absolute right-20 text-slate-400 hover:text-white px-2">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button onclick="handleSearch()" class="absolute right-1.5 bg-moto-orange hover:bg-orange-600 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">
+                            ძებნა
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center gap-2.5 sm:gap-3 order-2 lg:order-3">
+                    <!-- Install App Button -->
+                    <button onclick="openInstallModal()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl flex items-center gap-2 transition">
+                        <i class="fa-solid fa-download"></i>
+                        <span class="hidden md:inline">აპის ჩაწერა</span>
+                    </button>
+
+                    <!-- Add Product Button (MyMarket Style) -->
+                    <button onclick="openAddProductModal()" class="vip-gradient hover:opacity-95 text-white font-bold text-xs sm:text-sm px-4 py-3 rounded-xl shadow-lg shadow-moto-orange/25 flex items-center gap-2 transition transform active:scale-95">
+                        <i class="fa-solid fa-plus-circle text-base"></i>
+                        <span>დამატება</span>
+                    </button>
+
+                    <!-- Book Service Quick Button -->
+                    <button onclick="switchTab('service')" class="bg-moto-card hover:bg-slate-800 text-slate-200 border border-moto-border font-semibold text-xs sm:text-sm px-3.5 py-3 rounded-xl flex items-center gap-2 transition">
+                        <i class="fa-solid fa-screwdriver-wrench text-moto-orange"></i>
+                        <span class="hidden sm:inline">სერვისში ჩაწერა</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button onclick="toggleCartDrawer()" class="relative bg-moto-card hover:bg-slate-800 text-white border border-moto-border p-3 rounded-xl transition">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-moto-orange text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-2 overflow-x-auto pt-3 mt-3 border-t border-moto-border/60 no-scrollbar">
+                <button onclick="switchTab('market')" id="tab-market" class="nav-tab active-tab whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition bg-moto-orange text-white">
+                    <i class="fa-solid fa-store"></i> ყველა განცხადება
+                </button>
+                <button onclick="filterByQuickCategory('საბურავები')" id="tab-tires" class="nav-tab whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-moto-card flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-dot text-moto-orange"></i> მოტო საბურავები
+                </button>
+                <button onclick="filterByQuickCategory('ზეთები და ქიმია')" id="tab-oils" class="nav-tab whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-moto-card flex items-center gap-2 transition">
+                    <i class="fa-solid fa-oil-can text-amber-400"></i> ზეთები & ფილტრები
+                </button>
+                <button onclick="filterByQuickCategory('ნაწილები')" id="tab-parts" class="nav-tab whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-moto-card flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gears text-sky-400"></i> ნაწილები & ხუნდები
+                </button>
+                <button onclick="switchTab('service')" id="tab-service" class="nav-tab whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-moto-card flex items-center gap-2 transition">
+                    <i class="fa-solid fa-wrench text-emerald-400"></i> მოტო სახელოსნო & ფასები
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+
+        <!-- ==================== VIEW 1: MARKETPLACE (MYMARKET STYLE) ==================== -->
+        <div id="view-market" class="space-y-6">
+            
+            <!-- Quick Tire Size Finder Banner -->
+            <div class="bg-gradient-to-r from-moto-card via-slate-900 to-moto-card border border-moto-border rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none">
+                    <i class="fa-solid fa-dharmachakra text-[200px]"></i>
+                </div>
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 bg-moto-orange/20 text-moto-orange text-xs font-bold px-3 py-1 rounded-full mb-2">
+                            <i class="fa-solid fa-bolt"></i> სწრაფი შერჩევა ზომის მიხედვით
+                        </span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-white">ეძებ მოტოციკლის საბურავს? აირჩიე ზომა 1 კლიკით:</h2>
+                        <p class="text-xs sm:text-sm text-slate-400">ადგილზე გვაქვს როგორც ახალი, ასევე გერმანიიდან ჩამოტანილი უმაღლესი ხარისხის მეორადი საბურავები + მონტაჟი/ბალანსირება</p>
+                    </div>
+                    <!-- Popular Tire Size Pills -->
+                    <div class="flex flex-wrap gap-2" id="quickSizePills">
+                        <button onclick="selectTireSize('')" class="tire-pill bg-moto-orange text-white text-xs font-bold px-3 py-2 rounded-xl transition">ყველა ზომა</button>
+                        <button onclick="selectTireSize('120/70 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">120/70 R17 (წინა)</button>
+                        <button onclick="selectTireSize('180/55 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">180/55 R17</button>
+                        <button onclick="selectTireSize('190/55 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">190/55 R17</button>
+                        <button onclick="selectTireSize('190/50 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">190/50 R17</button>
+                        <button onclick="selectTireSize('160/60 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">160/60 R17</button>
+                        <button onclick="selectTireSize('150/60 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">150/60 R17</button>
+                        <button onclick="selectTireSize('110/70 R17')" class="tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition">110/70 R17</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketplace Grid Layout: Left Filter Sidebar + Right Product Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- LEFT SIDEBAR FILTERS -->
+                <aside class="lg:col-span-1 space-y-5">
+                    <div class="bg-moto-card border border-moto-border rounded-2xl p-5 sticky top-28 space-y-5">
+                        <div class="flex items-center justify-between border-b border-moto-border pb-3">
+                            <h3 class="font-bold text-base flex items-center gap-2">
+                                <i class="fa-solid fa-filter text-moto-orange"></i> ფილტრაცია
+                            </h3>
+                            <button onclick="resetFilters()" class="text-xs text-moto-orange hover:underline font-semibold">
+                                გასუფთავება
+                            </button>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">კატეგორია</label>
+                            <select id="filterCategory" onchange="applyFilters()" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                <option value="all">ყველა კატეგორია</option>
+                                <option value="საბურავები">მოტო საბურავები</option>
+                                <option value="ზეთები და ქიმია">ზეთები და ქიმია</option>
+                                <option value="ნაწილები">სათადარიგო ნაწილები & ხუნდები</option>
+                                <option value="აქსესუარები">მოტო აქსესუარები & ეკიპირება</option>
+                            </select>
+                        </div>
+
+                        <!-- Condition Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">მდგომარეობა</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setConditionFilter('all')" id="cond-all" class="cond-btn bg-moto-orange text-white text-xs font-bold py-2 rounded-lg border border-moto-orange transition">ყველა</button>
+                                <button onclick="setConditionFilter('ახალი')" id="cond-new" class="cond-btn bg-moto-dark text-slate-300 text-xs font-semibold py-2 rounded-lg border border-moto-border hover:border-slate-500 transition">ახალი</button>
+                                <button onclick="setConditionFilter('მეორადი')" id="cond-used" class="cond-btn bg-moto-dark text-slate-300 text-xs font-semibold py-2 rounded-lg border border-moto-border hover:border-slate-500 transition">მეორადი</button>
+                            </div>
+                        </div>
+
+                        <!-- Brand Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">ბრენდი / მწარმოებელი</label>
+                            <select id="filterBrand" onchange="applyFilters()" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                <option value="all">ყველა ბრენდი</option>
+                                <option value="Michelin">Michelin</option>
+                                <option value="Pirelli">Pirelli</option>
+                                <option value="Metzeler">Metzeler</option>
+                                <option value="Dunlop">Dunlop</option>
+                                <option value="Bridgestone">Bridgestone</option>
+                                <option value="Continental">Continental</option>
+                                <option value="Motul">Motul</option>
+                                <option value="Brembo">Brembo</option>
+                                <option value="NGK / Hiflofiltro">NGK / Hiflofiltro</option>
+                                <option value="DID">DID Racing</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Range Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">ფასი (₾ ლარი)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="minPrice" oninput="applyFilters()" placeholder="დან" class="w-1/2 bg-moto-dark border border-moto-border rounded-xl px-3 py-2 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                <span class="text-slate-500">-</span>
+                                <input type="number" id="maxPrice" oninput="applyFilters()" placeholder="მდე" class="w-1/2 bg-moto-dark border border-moto-border rounded-xl px-3 py-2 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Sort Order -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">სორტირება</label>
+                            <select id="sortOrder" onchange="applyFilters()" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                <option value="vip">VIP და ახალი დამატებული</option>
+                                <option value="price-asc">ფასი: ზრდადობით (იაფიდან)</option>
+                                <option value="price-desc">ფასი: კლებადობით (ძვირიდან)</option>
+                            </select>
+                        </div>
+
+                        <!-- Workshop Promo Card Inside Sidebar -->
+                        <div class="bg-gradient-to-br from-orange-600/20 to-amber-500/10 border border-moto-orange/40 rounded-xl p-4 space-y-2">
+                            <div class="flex items-center gap-2 text-moto-orange font-bold text-sm">
+                                <i class="fa-solid fa-wrench"></i> სერვისი ადგილზე!
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                ჩვენთან შეძენილ საბურავებსა და ზეთებზე მოქმედებს სპეციალური ფასდაკლება მონტაჟსა და შეცვლაზე!
+                            </p>
+                            <button onclick="switchTab('service')" class="w-full bg-moto-orange hover:bg-orange-600 text-white font-bold text-xs py-2 rounded-lg transition">
+                                სერვისში ჩაწერა →
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- RIGHT PRODUCT LISTING GRID -->
+                <section class="lg:col-span-3 space-y-4">
+                    
+                    <!-- Results Header Bar -->
+                    <div class="bg-moto-card border border-moto-border rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                        <div class="text-sm text-slate-300">
+                            ნაპოვნია <span id="resultsCount" class="font-extrabold text-moto-orange text-base">0</span> განცხადება
+                            <span id="activeSizeBadge" class="hidden ml-2 bg-moto-orange/20 text-moto-orange border border-moto-orange/40 text-xs font-bold px-2.5 py-0.5 rounded-full"></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-slate-400">
+                            <span>განცხადების დამატება უფასოა</span>
+                            <button onclick="openAddProductModal()" class="text-moto-orange hover:underline font-bold">+ დაამატე შენი ნივთი</button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                        <!-- Dynamically Populated via JS -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden bg-moto-card border border-moto-border rounded-2xl p-12 text-center space-y-4">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">არჩეული ფილტრით პროდუქტი ვერ მოიძებნა</h3>
+                        <p class="text-sm text-slate-400 max-w-md mx-auto">სცადეთ სხვა საბურავის ზომა, შეცვალეთ ფილტრი ან დაგვირეკეთ პირდაპირ საწყობში გადასამოწმებლად: 511 44 04 15</p>
+                        <button onclick="resetFilters()" class="bg-moto-orange hover:bg-orange-600 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition">
+                            ყველა პროდუქტის ნახვა
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 2: MOTO WORKSHOP & SERVICE BOOKING ==================== -->
+        <div id="view-service" class="hidden space-y-8">
+            
+            <!-- Service Hero Banner -->
+            <div class="bg-gradient-to-r from-moto-card via-slate-900 to-moto-card border border-moto-border rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <div class="max-w-2xl space-y-4 relative z-10">
+                    <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                        პროფესიონალური მოტო სახელოსნო • დიდი დიღომი
+                    </span>
+                    <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight">
+                        სრული მოტო სერვისი და საბურავების მონტაჟი / ბალანსირება
+                    </h1>
+                    <p class="text-slate-300 text-sm sm:text-base">
+                        თანამედროვე აპარატურა, გამოცდილი მექანიკოსები და გარანტირებული ხარისხი. ჩაეწერე ონლაინ რიგის გარეშე ან დაგვიკავშირდი: <a href="tel:511440415" class="text-moto-orange font-bold underline">511 44 04 15</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Service Price List (Left 2 Columns) -->
+                <div class="lg:col-span-2 space-y-4">
+                    <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-list text-moto-orange"></i> სერვისების ფასების კატალოგი
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="servicePriceList">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Online Service Appointment Form (Right 1 Column) -->
+                <div class="lg:col-span-1">
+                    <div class="bg-moto-card border border-moto-border rounded-2xl p-6 sticky top-28 shadow-xl space-y-4">
+                        <div class="border-b border-moto-border pb-3">
+                            <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-check text-moto-orange"></i> სერვისში ონლაინ ჩაწერა
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">დაჯავშნე ვიზიტი წინასწარ და არ დაკარგო დრო რიგში</p>
+                        </div>
+
+                        <form id="serviceBookingForm" onsubmit="submitServiceBooking(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">თქვენი სახელი *</label>
+                                <input type="text" id="bookName" required placeholder="მაგ: გიორგი" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">ტელეფონის ნომერი *</label>
+                                <input type="tel" id="bookPhone" required placeholder="მაგ: 599 00 00 00" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">მოტოციკლის მარკა და მოდელი *</label>
+                                <input type="text" id="bookBike" required placeholder="მაგ: Yamaha R6 / KTM Duke 390 / Kawasaki Z800" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">აირჩიეთ სერვისი *</label>
+                                <select id="bookServiceType" required class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                    <option value="საბურავის მონტაჟი და ბალანსირება">საბურავის მონტაჟი და ბალანსირება</option>
+                                    <option value="ზეთის და ფილტრის შეცვლა">ზეთის და ფილტრის შეცვლა</option>
+                                    <option value="სამუხრუჭე ხუნდების / სითხის შეცვლა">სამუხრუჭე ხუნდების / სითხის შეცვლა</option>
+                                    <option value="ცეპის და კბილანების შეცვლა / დაჭიმვა">ცეპის და კბილანების შეცვლა / დაჭიმვა</option>
+                                    <option value="წინა ამორტიზატორების (ვილკების) სერვისი">წინა ამორტიზატორების (ვილკების) სერვისი</option>
+                                    <option value="კომპიუტერული დიაგნოსტიკა და ელექტროობა">კომპიუტერული დიაგნოსტიკა და ელექტროობა</option>
+                                    <option value="ძრავის და სავალი ნაწილის სრული შემოწმება">ძრავის და სავალი ნაწილის სრული შემოწმება</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">თარიღი *</label>
+                                    <input type="date" id="bookDate" required class="w-full bg-moto-dark border border-moto-border rounded-xl px-3 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">საათი *</label>
+                                    <select id="bookTime" required class="w-full bg-moto-dark border border-moto-border rounded-xl px-3 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:30">18:30</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">დამატებითი კომენტარი (სურვილისამებრ)</label>
+                                <textarea id="bookNotes" rows="2" placeholder="მაგ: მჭირდება უკანა 180/55 საბურავიც..." class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2 text-sm text-white focus:border-moto-orange focus:outline-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full vip-gradient hover:opacity-95 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-moto-orange/25 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-check-circle"></i> ვიზიტის დაჯავშნა
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== MODAL 1: ADD NEW PRODUCT (+ განცხადების დამატება) ==================== -->
+    <div id="addProductModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-moto-card border border-moto-border rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5 my-8">
+            <div class="flex items-center justify-between border-b border-moto-border pb-4">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-moto-orange"></i> ახალი განცხადების დამატება
+                    </h3>
+                    <p class="text-xs text-slate-400">დაამატე ახალი საბურავი, ნაწილი ან ზეთი შენს მაღაზიაში</p>
+                </div>
+                <button onclick="closeAddProductModal()" class="text-slate-400 hover:text-white text-xl px-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="addProductForm" onsubmit="saveNewProduct(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-300 mb-1">განცხადების სათაური *</label>
+                        <input type="text" id="prodTitle" required placeholder="მაგ: Michelin Pilot Power 2CT 180/55 ZR17" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">კატეგორია *</label>
+                        <select id="prodCategory" required class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            <option value="საბურავები">მოტო საბურავები</option>
+                            <option value="ზეთები და ქიმია">ზეთები და ქიმია</option>
+                            <option value="ნაწილები">სათადარიგო ნაწილები & ხუნდები</option>
+                            <option value="აქსესუარები">მოტო აქსესუარები</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">ბრენდი *</label>
+                        <input type="text" id="prodBrand" required placeholder="მაგ: Michelin, Pirelli, Motul..." class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">საბურავის ზომა / სპეციფიკაცია</label>
+                        <input type="text" id="prodSize" placeholder="მაგ: 180/55 R17 ან 10W-40 4L" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">მდგომარეობა *</label>
+                        <select id="prodCondition" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            <option value="ახალი">ახალი</option>
+                            <option value="მეორადი">მეორადი (გერმანიიდან)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">ფასი (₾ ლარი) *</label>
+                        <input type="number" id="prodPrice" required min="1" placeholder="მაგ: 220" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">მარაგშია (რაოდენობა) *</label>
+                        <input type="number" id="prodStock" required min="1" value="4" class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-300 mb-1">სურათის ლინკი (URL) ან ატვირთვა კომპიუტერიდან</label>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="url" id="prodImage" placeholder="ჩასვით ფოტოს URL ან აირჩიეთ ფაილი..." class="flex-1 bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-moto-orange focus:outline-none">
+                            <label class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-upload"></i> ფოტოს არჩევა
+                                <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-300 mb-1">დეტალური აღწერა *</label>
+                        <textarea id="prodDesc" required rows="3" placeholder="აღწერეთ პროტექტორის პროცენტულობა, DOT წელი, რომელ მოტოციკლზე მიდის..." class="w-full bg-moto-dark border border-moto-border rounded-xl px-3.5 py-2 text-sm text-white focus:border-moto-orange focus:outline-none"></textarea>
+                    </div>
+
+                    <div class="sm:col-span-2 flex items-center gap-2">
+                        <input type="checkbox" id="prodVip" checked class="w-4 h-4 accent-moto-orange rounded">
+                        <label for="prodVip" class="text-xs font-bold text-amber-400">VIP სტატუსით გამოქვეყნება (გამოჩნდება სიის თავში)</label>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-moto-border">
+                    <button type="button" onclick="closeAddProductModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold">
+                        გაუქმება
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl vip-gradient text-white text-sm font-extrabold shadow-lg shadow-moto-orange/30">
+                        <i class="fa-solid fa-check mr-1"></i> გამოქვეყნება
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: PRODUCT QUICK VIEW DETAIL ==================== -->
+    <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-moto-card border border-moto-border rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl my-8" id="productDetailContent">
+            <!-- Dynamically populated via JS -->
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: ADMIN / OWNER DASHBOARD ==================== -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-moto-card border border-moto-border rounded-2xl max-w-4xl w-full p-6 shadow-2xl space-y-6 my-8">
+            <div class="flex items-center justify-between border-b border-moto-border pb-4">
+                <div>
+                    <h3 class="text-xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-moto-orange"></i> მფლობელის მართვის პანელი
+                    </h3>
+                    <p class="text-xs text-slate-400">აქედან აკონტროლებ სერვისში ჩაწერილ კლიენტებს და მარაგებს</p>
+                </div>
+                <button onclick="toggleAdminPanel()" class="text-slate-400 hover:text-white text-xl px-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="font-bold text-sm text-moto-orange uppercase tracking-wider">სახელოსნოში დაჯავშნილი ვიზიტები:</h4>
+                <div id="adminBookingsList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="border-t border-moto-border pt-4 flex flex-wrap justify-between items-center gap-3">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="resetDefaultInventory()" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-4 py-2 rounded-xl font-semibold transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> საწყისი პროდუქციის აღდგენა
+                    </button>
+                    <button onclick="downloadPwaFiles()" class="text-xs bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl font-bold transition">
+                        <i class="fa-solid fa-file-arrow-down mr-1"></i> PWA ფაილების გადმოწერა (manifest.json & sw.js)
+                    </button>
+                </div>
+                <button onclick="toggleAdminPanel()" class="bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold px-6 py-2.5 rounded-xl">
+                    დახურვა
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 4: INSTALL APP ON PHONE (PWA & QR CODE) ==================== -->
+    <div id="installAppModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-moto-card border border-moto-border rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-6 my-8">
+            <div class="flex items-center justify-between border-b border-moto-border pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl vip-gradient flex items-center justify-center text-white text-2xl shadow-lg">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-black text-white">გადმოწერე MOTOMARKET ტელეფონში</h3>
+                        <p class="text-xs text-slate-400">დააყენე აპლიკაცია Android-სა და iPhone-ზე 5 წამში</p>
+                    </div>
+                </div>
+                <button onclick="closeInstallModal()" class="text-slate-400 hover:text-white text-xl px-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Direct Install Button (If Supported by Browser) -->
+            <div class="bg-gradient-to-r from-moto-orange/20 to-amber-500/10 border border-moto-orange/50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="space-y-1 text-center sm:text-left">
+                    <span class="text-xs font-extrabold uppercase text-moto-orange">სწრაფი ინსტალაცია</span>
+                    <h4 class="text-sm sm:text-base font-bold text-white">დააჭირე ღილაკს აპლიკაციის პირდაპირ ჩასაწერად</h4>
+                    <p class="text-xs text-slate-300">მუშაობს App Store-ის და Play Store-ის გარეშე პირდაპირ ბრაუზერიდან</p>
+                </div>
+                <button onclick="triggerNativeInstall()" class="vip-gradient hover:opacity-95 text-white font-black text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-moto-orange/30 whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> ახლავე ჩაწერა
+                </button>
+            </div>
+
+            <!-- Instructions Grid: Android vs iPhone -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- iPhone / iOS Guide -->
+                <div class="bg-moto-dark border border-moto-border rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center gap-2 text-white font-bold text-sm border-b border-moto-border pb-2">
+                        <i class="fa-brands fa-apple text-xl text-slate-200"></i> iPhone-ზე (Safari)
+                    </div>
+                    <ol class="text-xs text-slate-300 space-y-2.5 list-decimal list-inside">
+                        <li>გახსენი საიტი <strong>Safari</strong> ბრაუზერით</li>
+                        <li>ქვემოთ დააჭირე გაზიარების ღილაკს <span class="bg-slate-800 px-2 py-0.5 rounded text-sky-400 font-bold"><i class="fa-solid fa-arrow-up-from-bracket"></i> Share</span></li>
+                        <li>ჩამოსქროლე და აირჩიე <strong class="text-moto-orange">"Add to Home Screen"</strong> (მთავარ ეკრანზე დამატება)</li>
+                        <li>დააჭირე <strong>Add</strong> — აპლიკაციის ხატულა გაჩნდება ეკრანზე!</li>
+                    </ol>
+                </div>
+
+                <!-- Android Guide -->
+                <div class="bg-moto-dark border border-moto-border rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center gap-2 text-white font-bold text-sm border-b border-moto-border pb-2">
+                        <i class="fa-brands fa-android text-xl text-emerald-400"></i> Android-ზე (Chrome)
+                    </div>
+                    <ol class="text-xs text-slate-300 space-y-2.5 list-decimal list-inside">
+                        <li>გახსენი საიტი <strong>Chrome</strong> ბრაუზერით</li>
+                        <li>ზედა მარჯვენა კუთხეში დააჭირე <strong>3 წერტილს (⋮)</strong></li>
+                        <li>აირჩიე <strong class="text-emerald-400">"Install App"</strong> ან <strong>"Add to Home screen"</strong></li>
+                        <li>დაადასტურე და აპლიკაცია ჩაიწერება ტელეფონში!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- QR Code for Workshop Customers + Hosting Guide -->
+            <div class="bg-moto-dark border border-moto-border rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-5">
+                <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://motomarket.ge" alt="QR Code" class="w-28 h-28 rounded-xl border-4 border-white shrink-0">
+                <div class="space-y-1.5 text-center sm:text-left">
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2.5 py-0.5 rounded-full">სახელოსნოს QR კოდი</span>
+                    <h4 class="text-sm font-bold text-white">დაასკანერე ტელეფონის კამერით</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        როცა საიტს ატვირთავ ჰოსტინგზე (მაგ. <strong>Netlify Drop</strong>-ზე), ეს QR კოდი ავტომატურად გადაიყვანს კლიენტებს შენს აპლიკაციაზე.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SHOPPING CART DRAWER ==================== -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCartDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-xs"></div>
+        <div class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-moto-card border-l border-moto-border shadow-2xl flex flex-col z-10">
+            <div class="p-5 border-b border-moto-border flex items-center justify-between">
+                <h3 class="text-lg font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-moto-orange"></i> ჩემი კალათა
+                </h3>
+                <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
+                <!-- Cart Items rendered here -->
+            </div>
+
+            <div class="p-5 border-t border-moto-border bg-moto-dark space-y-4">
+                <div class="flex items-center justify-between text-base">
+                    <span class="text-slate-400 font-semibold">ჯამური ღირებულება:</span>
+                    <span id="cartTotalGel" class="text-2xl font-black text-moto-orange">0 ₾</span>
+                </div>
+                <button onclick="checkoutOrder()" class="w-full vip-gradient text-white font-extrabold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-phone-volume"></i> შეკვეთის გაფორმება / დარეკვა
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 border-2 border-moto-orange text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-moto-orange text-xl"></i>
+        <span id="toastMessage" class="text-sm font-bold"></span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-moto-dark border-t border-moto-border mt-16 py-10 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-motorcycle text-moto-orange text-xl"></i>
+                    <span class="text-lg font-black text-white">MOTO<span class="text-moto-orange">MARKET</span> & SERVICE</span>
+                </div>
+                <p class="text-xs leading-relaxed">
+                    მოტოციკლების სახელოსნო, მეორადი და ახალი საბურავები გერმანიიდან, პრემიუმ ზეთები და სათადარიგო ნაწილები ერთ სივრცეში.
+                </p>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-white">სწრაფი ნავიგაცია</h4>
+                <ul class="space-y-1 text-xs">
+                    <li><button onclick="filterByQuickCategory('საბურავები')" class="hover:text-moto-orange">მოტო საბურავები (R17, R16, R18, R19, R21)</button></li>
+                    <li><button onclick="filterByQuickCategory('ზეთები და ქიმია')" class="hover:text-moto-orange">ძრავის ზეთები (Motul, Liqui Moly)</button></li>
+                    <li><button onclick="switchTab('service')" class="hover:text-moto-orange">საბურავების მონტაჟი და ბალანსირება</button></li>
+                </ul>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-white">კონტაქტი</h4>
+                <p class="text-xs"><i class="fa-solid fa-location-dot text-moto-orange mr-2"></i> თბილისი, დიდი დიღომი</p>
+                <p class="text-xs"><i class="fa-solid fa-phone text-moto-orange mr-2"></i> ტელ: 511 44 04 15</p>
+                <p class="text-xs"><i class="fa-solid fa-clock text-moto-orange mr-2"></i> სამუშაო საათები: 10:00 - 20:00</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- APPLICATION JAVASCRIPT -->
+    <script>
+        // 1. INITIAL REALISTIC INVENTORY (Tires, Oils, Parts)
+        const DEFAULT_PRODUCTS = [
+            {
+                id: 101,
+                title: "Michelin Pilot Power 2CT 180/55 ZR17 (უკანა)",
+                category: "საბურავები",
+                brand: "Michelin",
+                size: "180/55 R17",
+                condition: "მეორადი",
+                price: 190,
+                stock: 3,
+                vip: true,
+                tread: "90% პროტექტორი",
+                image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=700&q=80",
+                desc: "ჩამოტანილია გერმანიიდან. იდეალურ მდგომარეობაში, ლატკის და დაზიანების გარეშე. რბილი და ძალიან მაგარი მოჭიდებით. ადგილზე გვაქვს მონტაჟი და ბალანსირება."
+            },
+            {
+                id: 102,
+                title: "Pirelli Diablo Rosso III 120/70 ZR17 (წინა)",
+                category: "საბურავები",
+                brand: "Pirelli",
+                size: "120/70 R17",
+                condition: "ახალი",
+                price: 360,
+                stock: 5,
+                vip: true,
+                tread: "100% ახალი",
+                image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=700&q=80",
+                desc: "სულ ახალი სპორტული საბურავი Pirelli Diablo Rosso III. იდეალურია როგორც ქალაქისთვის, ასევე აგრესიული მართვისთვის."
+            },
+            {
+                id: 103,
+                title: "Metzeler Sportec M7 RR 190/55 ZR17 (უკანა)",
+                category: "საბურავები",
+                brand: "Metzeler",
+                size: "190/55 R17",
+                condition: "მეორადი",
+                price: 210,
+                stock: 2,
+                vip: true,
+                tread: "85% პროტექტორი",
+                image: "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&w=700&q=80",
+                desc: "გერმანული მეორადი საბურავი ქარხნულ მდგომარეობაში. მიდის 1000cc სპორტბაიკებზე (Yamaha R1, BMW S1000RR, Kawasaki ZX-10R, GSX-R1000)."
+            },
+            {
+                id: 104,
+                title: "Motul 7100 10W-40 4T 100% სინთეტიკა (4 ლიტრი)",
+                category: "ზეთები და ქიმია",
+                brand: "Motul",
+                size: "10W-40 (4L)",
+                condition: "ახალი",
+                price: 165,
+                stock: 12,
+                vip: true,
+                tread: "ორიგინალი Ester",
+                image: "https://images.unsplash.com/photo-1635773054018-22c3885b7b6b?auto=format&fit=crop&w=700&q=80",
+                desc: "100% სინთეტიკური Ester ტექნოლოგიის ძრავის ზეთი. ჩვენთან შეძენის შემთხვევაში ზეთის და ფილტრის შეცვლა სპეციალურ ფასად!"
+            },
+            {
+                id: 105,
+                title: "Dunlop Sportmax Roadsmart 160/60 ZR17",
+                category: "საბურავები",
+                brand: "Dunlop",
+                size: "160/60 R17",
+                condition: "მეორადი",
+                price: 170,
+                stock: 4,
+                vip: false,
+                tread: "88% პროტექტორი",
+                image: "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&w=700&q=80",
+                desc: "მიდის Kawasaki Ninja 650, ER-6n, Suzuki SV650, Yamaha MT-07, KTM Duke 690 და სხვა მოდელებზე."
+            },
+            {
+                id: 106,
+                title: "Brembo კერამიკული სამუხრუჭე ხუნდები (კომპლექტი)",
+                category: "ნაწილები",
+                brand: "Brembo",
+                size: "წინა / უკანა",
+                condition: "ახალი",
+                price: 95,
+                stock: 8,
+                vip: false,
+                tread: "ახალი ყუთით",
+                image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=700&q=80",
+                desc: "უმაღლესი ხარისხის სამუხრუჭე ხუნდები (კალოდკები) Honda, Yamaha, Kawasaki, Suzuki და KTM მოდელებისთვის. არ წრიპინებს და არ აზიანებს აპორნს."
+            },
+            {
+                id: 107,
+                title: "Bridgestone Battlax S22 110/70 R17 & 150/60 R17 წყვილი",
+                category: "საბურავები",
+                brand: "Bridgestone",
+                size: "150/60 R17",
+                condition: "მეორადი",
+                price: 290,
+                stock: 2,
+                vip: true,
+                tread: "92% წყვილი",
+                image: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=700&q=80",
+                desc: "იდეალური წყვილი KTM RC 390 / Duke 390, Yamaha R3, Kawasaki Ninja 300/400 მოდელებისთვის."
+            },
+            {
+                id: 108,
+                title: "Hiflofiltro ზეთის ფილტრები (HF204, HF303, HF138) + NGK სანთლები",
+                category: "ნაწილები",
+                brand: "NGK / Hiflofiltro",
+                size: "უნივერსალური",
+                condition: "ახალი",
+                price: 30,
+                stock: 25,
+                vip: false,
+                tread: "მარაგშია",
+                image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=700&q=80",
+                desc: "ადგილზე გვაქვს ყველა მოტოციკლის ზეთისა და ჰაერის ფილტრები, ასევე ორიგინალი NGK Iridium აალების სანთლები (სვეჩები)."
+            },
+            {
+                id: 109,
+                title: "DID 520 / 525 VX3 ოქროსფერი სალნიკიანი ცეპი",
+                category: "ნაწილები",
+                brand: "DID",
+                size: "520 / 525 X-Ring",
+                condition: "ახალი",
+                price: 240,
+                stock: 5,
+                vip: true,
+                tread: "იაპონური",
+                image: "https://images.unsplash.com/photo-1558980664-3a031cf67ea8?auto=format&fit=crop&w=700&q=80",
+                desc: "ორიგინალი იაპონური DID X-Ring ცეპი. ადგილზე გვაქვს სპეციალური ხელსაწყოთი დაქლონვა და დაყენება."
+            }
+        ];
+
+        const SERVICE_PRICES = [
+            { name: "საბურავის მოხსნა, მონტაჟი და ბალანსირება", price: "25 - 40 ₾", duration: "30 წუთი", icon: "fa-circle-dot" },
+            { name: "ძრავის ზეთის და ფილტრის შეცვლა", price: "20 ₾", duration: "20 წუთი", icon: "fa-oil-can" },
+            { name: "სამუხრუჭე ხუნდების შეცვლა (სუპორტის წმენდით)", price: "25 ₾", duration: "25 წუთი", icon: "fa-compact-disc" },
+            { name: "წინა ამორტიზატორების (ვილკების) სერვისი / სალნიკები", price: "120 - 160 ₾", duration: "2 საათი", icon: "fa-arrows-up-down" },
+            { name: "ცეპის და კბილანების შეცვლა / ლაზერით გასწორება", price: "60 ₾", duration: "45 წუთი", icon: "fa-link" },
+            { name: "კომპიუტერული დიაგნოსტიკა & ყიდვისწინა შემოწმება", price: "50 ₾", duration: "40 წუთი", icon: "fa-laptop-medical" }
+        ];
+
+        // 2. STATE MANAGEMENT
+        let products = JSON.parse(localStorage.getItem('moto_market_products')) || DEFAULT_PRODUCTS;
+        let cart = JSON.parse(localStorage.getItem('moto_market_cart')) || [];
+        let bookings = JSON.parse(localStorage.getItem('moto_market_bookings')) || [
+            { id: 1, name: "ლევანი", phone: "599 12 34 56", bike: "Yamaha MT-07", service: "საბურავის მონტაჟი და ბალანსირება", date: "2025-05-15", time: "14:00", notes: "180/55 უკანა საბურავი მინდა" }
+        ];
+
+        let activeCondition = 'all';
+        let activeTireSize = '';
+        let uploadedImageDataUrl = '';
+
+        // 3. INITIALIZE APP
+        window.onload = function() {
+            renderProducts();
+            renderServiceCatalog();
+            updateCartUI();
+            updateAdminCount();
+            initPWA();
+            
+            // Set default date in booking form to today
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('bookDate');
+            if (dateInput) dateInput.value = today;
+        };
+
+        // 3.1 PWA (PROGRESSIVE WEB APP) SETUP & INSTALL LOGIC
+        let deferredInstallPrompt = null;
+
+        function getManifestObject() {
+            return {
+                name: "MotoMarket & Service - მოტო სახელოსნო და საბურავები",
+                short_name: "MotoMarket",
+                description: "მოტო საბურავები, ნაწილები, ზეთები და სახელოსნო დიდ დიღომში",
+                start_url: "./index.html",
+                display: "standalone",
+                background_color: "#0b0f17",
+                theme_color: "#FF5500",
+                orientation: "portrait-primary",
+                icons: [
+                    {
+                        src: "https://cdn-icons-png.flaticon.com/512/3097/3097136.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+        }
+
+        function initPWA() {
+            // 1. Dynamically inject Web Manifest
+            const manifestObj = getManifestObject();
+            const manifestBlob = new Blob([JSON.stringify(manifestObj, null, 2)], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            const manifestLink = document.getElementById('pwa-manifest-link');
+            if (manifestLink) manifestLink.setAttribute('href', manifestUrl);
+
+            // 2. Update QR code to current URL
+            const qrImg = document.getElementById('qrCodeImg');
+            if (qrImg && window.location.href.startsWith('http')) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+            }
+
+            // 3. Capture install prompt on Android / Desktop Chrome
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+            });
+        }
+
+        function openInstallModal() {
+            document.getElementById('installAppModal').classList.remove('hidden');
+        }
+
+        function closeInstallModal() {
+            document.getElementById('installAppModal').classList.add('hidden');
+        }
+
+        async function triggerNativeInstall() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast("აპლიკაცია წარმატებით ყენდება თქვენს ტელეფონში!");
+                    closeInstallModal();
+                }
+                deferredInstallPrompt = null;
+            } else {
+                showToast("გამოიყენეთ ქვემოთ მოცემული ინსტრუქცია (Share -> Add to Home Screen)");
+            }
+        }
+
+        function downloadPwaFiles() {
+            // Download manifest.json
+            const manifestBlob = new Blob([JSON.stringify(getManifestObject(), null, 2)], { type: 'application/json' });
+            const a1 = document.createElement('a');
+            a1.href = URL.createObjectURL(manifestBlob);
+            a1.download = 'manifest.json';
+            a1.click();
+
+            // Download sw.js (Service Worker)
+            const swCode = `const CACHE_NAME = 'motomarket-v1';
+self.addEventListener('install', (e) => {
+    self.skipWaiting();
+});
+self.addEventListener('fetch', (e) => {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+});`;
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const a2 = document.createElement('a');
+            a2.href = URL.createObjectURL(swBlob);
+            a2.download = 'sw.js';
+            a2.click();
+
+            showToast("manifest.json და sw.js გადმოიწერა კომპიუტერში!");
+        }
+
+        // 4. RENDER PRODUCTS IN MYMARKET CARD STYLE
+        function renderProducts() {
+            const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const brand = document.getElementById('filterBrand').value;
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            // Show/hide clear search button
+            document.getElementById('clearSearchBtn').classList.toggle('hidden', searchQuery.length === 0);
+
+            // Filter products
+            let filtered = products.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) ||
+                                      item.brand.toLowerCase().includes(searchQuery) ||
+                                      (item.size && item.size.toLowerCase().includes(searchQuery)) ||
+                                      item.desc.toLowerCase().includes(searchQuery);
+                const matchesCategory = category === 'all' || item.category === category;
+                const matchesBrand = brand === 'all' || item.brand.toLowerCase() === brand.toLowerCase();
+                const matchesCondition = activeCondition === 'all' || item.condition === activeCondition;
+                const matchesSize = !activeTireSize || (item.size && item.size.toLowerCase().includes(activeTireSize.toLowerCase()));
+                const matchesPrice = item.price >= minPrice && item.price <= maxPrice;
+
+                return matchesSearch && matchesCategory && matchesBrand && matchesCondition && matchesSize && matchesPrice;
+            });
+
+            // Sort products
+            if (sortOrder === 'price-asc') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortOrder === 'price-desc') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else {
+                filtered.sort((a, b) => (b.vip === a.vip) ? b.id - a.id : (b.vip ? 1 : -1));
+            }
+
+            // Update count & active size pill badge
+            document.getElementById('resultsCount').textContent = filtered.length;
+            const sizeBadge = document.getElementById('activeSizeBadge');
+            if (activeTireSize) {
+                sizeBadge.textContent = `ზომა: ${activeTireSize}`;
+                sizeBadge.classList.remove('hidden');
+            } else {
+                sizeBadge.classList.add('hidden');
+            }
+
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-moto-card border ${item.vip ? 'border-moto-orange/50' : 'border-moto-border'} rounded-2xl overflow-hidden flex flex-col justify-between card-hover group">
+                    <div>
+                        <!-- Image Box -->
+                        <div onclick="openProductDetail(${item.id})" class="relative h-52 bg-slate-900 overflow-hidden cursor-pointer">
+                            <img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/600x400/18202C/FF5500?text=MOTO+MARKET'" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            
+                            <!-- Top Badges -->
+                            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                                ${item.vip ? `<span class="vip-gradient text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow uppercase tracking-wider"><i class="fa-solid fa-crown mr-1"></i>VIP</span>` : ''}
+                                <span class="${item.condition === 'ახალი' ? 'bg-emerald-500 text-white' : 'bg-sky-500 text-white'} text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow">
+                                    ${item.condition === 'ახალი' ? 'ახალი' : 'მეორადი (გერმანიიდან)'}
+                                </span>
+                            </div>
+
+                            <!-- Delete Button for Owner -->
+                            <button onclick="event.stopPropagation(); deleteProduct(${item.id})" title="განცხადების წაშლა" class="absolute top-3 right-3 bg-black/60 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-75 hover:opacity-100 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+
+                            <!-- Bottom Spec Strip -->
+                            <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between bg-black/75 backdrop-blur-xs px-3 py-1.5 rounded-lg text-xs">
+                                <span class="font-bold text-moto-orange">${item.size || item.brand}</span>
+                                <span class="text-slate-300 font-medium">${item.tread || 'მარაგშია'}</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span class="font-semibold text-slate-300">${item.brand} • ${item.category}</span>
+                                <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-check-circle"></i> მარაგში (${item.stock})</span>
+                            </div>
+                            <h4 onclick="openProductDetail(${item.id})" class="font-bold text-white text-sm sm:text-base line-clamp-2 cursor-pointer group-hover:text-moto-orange transition">
+                                ${item.title}
+                            </h4>
+                            <p class="text-xs text-slate-400 line-clamp-2">${item.desc}</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer: Price + Actions -->
+                    <div class="px-4 pb-4 pt-3 border-t border-moto-border/60 flex items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs text-slate-400 block">ფასი:</span>
+                            <span class="text-xl font-black text-white">${item.price} <span class="text-moto-orange">₾</span></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openProductDetail(${item.id})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-2.5 rounded-xl transition">
+                                დეტალურად
+                            </button>
+                            <button onclick="addToCart(${item.id})" class="bg-moto-orange hover:bg-orange-600 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-md shadow-moto-orange/20 flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 5. FILTER HELPERS
+        function handleSearch() {
+            switchTab('market');
+            renderProducts();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderProducts();
+        }
+
+        function applyFilters() {
+            renderProducts();
+        }
+
+        function setConditionFilter(cond) {
+            activeCondition = cond;
+            document.querySelectorAll('.cond-btn').forEach(btn => {
+                btn.className = "cond-btn bg-moto-dark text-slate-300 text-xs font-semibold py-2 rounded-lg border border-moto-border hover:border-slate-500 transition";
+            });
+            const activeId = cond === 'all' ? 'cond-all' : (cond === 'ახალი' ? 'cond-new' : 'cond-used');
+            document.getElementById(activeId).className = "cond-btn bg-moto-orange text-white text-xs font-bold py-2 rounded-lg border border-moto-orange transition";
+            renderProducts();
+        }
+
+        function selectTireSize(size) {
+            activeTireSize = size;
+            if (size) {
+                document.getElementById('filterCategory').value = 'საბურავები';
+            }
+            document.querySelectorAll('.tire-pill').forEach(pill => {
+                if ((size === '' && pill.textContent.includes('ყველა')) || (size !== '' && pill.textContent.includes(size))) {
+                    pill.className = "tire-pill bg-moto-orange text-white text-xs font-bold px-3 py-2 rounded-xl transition";
+                } else {
+                    pill.className = "tire-pill bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition";
+                }
+            });
+            renderProducts();
+        }
+
+        function filterByQuickCategory(cat) {
+            switchTab('market');
+            document.getElementById('filterCategory').value = cat;
+            activeTireSize = '';
+            renderProducts();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterCategory').value = 'all';
+            document.getElementById('filterBrand').value = 'all';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('sortOrder').value = 'vip';
+            activeTireSize = '';
+            setConditionFilter('all');
+            selectTireSize('');
+        }
+
+        // 6. TAB NAVIGATION (Market vs Service)
+        function switchTab(tab) {
+            const marketView = document.getElementById('view-market');
+            const serviceView = document.getElementById('view-service');
+
+            if (tab === 'service') {
+                marketView.classList.add('hidden');
+                serviceView.classList.remove('hidden');
+            } else {
+                serviceView.classList.add('hidden');
+                marketView.classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 7. ADD NEW PRODUCT MODAL & SAVE TO LOCALSTORAGE
+        function openAddProductModal() {
+            document.getElementById('addProductModal').classList.remove('hidden');
+        }
+
+        function closeAddProductModal() {
+            document.getElementById('addProductModal').classList.add('hidden');
+            document.getElementById('addProductForm').reset();
+            uploadedImageDataUrl = '';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageDataUrl = e.target.result;
+                document.getElementById('prodImage').value = "ფოტო არჩეულია კომპიუტერიდან ✓";
+                showToast("სურათი წარმატებით აიტვირთა!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveNewProduct(event) {
+            event.preventDefault();
+            const title = document.getElementById('prodTitle').value.trim();
+            const category = document.getElementById('prodCategory').value;
+            const brand = document.getElementById('prodBrand').value.trim();
+            const size = document.getElementById('prodSize').value.trim() || brand;
+            const condition = document.getElementById('prodCondition').value;
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const stock = parseInt(document.getElementById('prodStock').value) || 1;
+            const imageInput = document.getElementById('prodImage').value.trim();
+            const desc = document.getElementById('prodDesc').value.trim();
+            const vip = document.getElementById('prodVip').checked;
+
+            const finalImage = uploadedImageDataUrl || (imageInput.startsWith('http') ? imageInput : "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=700&q=80");
+
+            const newProduct = {
+                id: Date.now(),
+                title,
+                category,
+                brand,
+                size,
+                condition,
+                price,
+                stock,
+                vip,
+                tread: condition === 'ახალი' ? '100% ახალი' : 'გერმანული',
+                image: finalImage,
+                desc
+            };
+
+            products.unshift(newProduct);
+            localStorage.setItem('moto_market_products', JSON.stringify(products));
+            closeAddProductModal();
+            switchTab('market');
+            renderProducts();
+            showToast("განცხადება წარმატებით დაემატა მარკეტზე!");
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('moto_market_products', JSON.stringify(products));
+            renderProducts();
+            showToast("განცხადება წაიშალა");
+        }
+
+        function resetDefaultInventory() {
+            products = [...DEFAULT_PRODUCTS];
+            localStorage.setItem('moto_market_products', JSON.stringify(products));
+            renderProducts();
+            toggleAdminPanel();
+            showToast("საწყისი პროდუქცია აღდგენილია!");
+        }
+
+        // 8. PRODUCT QUICK VIEW MODAL
+        function openProductDetail(id) {
+            const item = products.find(p => p.id === id);
+            if (!item) return;
+
+            const content = document.getElementById('productDetailContent');
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="h-64 md:h-auto bg-slate-900 relative">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                        <span class="absolute top-4 left-4 ${item.condition === 'ახალი' ? 'bg-emerald-500' : 'bg-sky-500'} text-white text-xs font-bold px-3 py-1 rounded-lg">
+                            ${item.condition}
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-4 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-moto-orange uppercase">${item.category} • ${item.brand}</span>
+                                <button onclick="closeProductDetail()" class="text-slate-400 hover:text-white text-xl">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                            <h2 class="text-xl font-black text-white">${item.title}</h2>
+                            <div class="text-3xl font-black text-moto-orange">${item.price} ₾</div>
+                            
+                            <div class="bg-moto-dark border border-moto-border rounded-xl p-3 grid grid-cols-2 gap-2 text-xs">
+                                <div><span class="text-slate-400">ზომა/სპეც:</span> <strong class="text-white">${item.size}</strong></div>
+                                <div><span class="text-slate-400">მარაგშია:</span> <strong class="text-emerald-400">${item.stock} ცალი</strong></div>
+                                <div><span class="text-slate-400">ლოკაცია:</span> <strong class="text-white">დიდი დიღომი</strong></div>
+                                <div><span class="text-slate-400">მონტაჟი:</span> <strong class="text-moto-orange">ადგილზე გვაქვს</strong></div>
+                            </div>
+
+                            <p class="text-sm text-slate-300 leading-relaxed">${item.desc}</p>
+                        </div>
+
+                        <div class="space-y-2 pt-4 border-t border-moto-border">
+                            <div class="flex gap-2">
+                                <button onclick="addToCart(${item.id}); closeProductDetail();" class="flex-1 vip-gradient text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> კალათაში დამატება
+                                </button>
+                                <a href="tel:511440415" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-3 rounded-xl flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-phone"></i> დარეკვა
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('productDetailModal').classList.remove('hidden');
+        }
+
+        function closeProductDetail() {
+            document.getElementById('productDetailModal').classList.add('hidden');
+        }
+
+        // 9. CART MANAGEMENT
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const existing = cart.find(c => c.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            localStorage.setItem('moto_market_cart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`"${product.title}" დაემატა კალათაში!`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(c => c.id !== id);
+            localStorage.setItem('moto_market_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cartBadge').textContent = count;
+
+            const container = document.getElementById('cartItemsContainer');
+            const totalEl = document.getElementById('cartTotalGel');
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-400 text-sm py-12">თქვენი კალათა ცარიელია</p>`;
+                totalEl.textContent = "0 ₾";
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                total += item.price * item.qty;
+                return `
+                    <div class="bg-moto-dark border border-moto-border rounded-xl p-3 flex items-center gap-3">
+                        <img src="${item.image}" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${item.title}</h4>
+                            <p class="text-xs text-slate-400">${item.price} ₾ x ${item.qty}</p>
+                            <p class="text-sm font-black text-moto-orange">${item.price * item.qty} ₾</p>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-red-400 p-2">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.textContent = `${total} ₾`;
+        }
+
+        function toggleCartDrawer() {
+            document.getElementById('cartDrawer').classList.toggle('hidden');
+        }
+
+        function checkoutOrder() {
+            if (cart.length === 0) {
+                showToast("კალათა ცარიელია!");
+                return;
+            }
+            showToast("შეკვეთა მიღებულია! დაგვიკავშირდით: 511 44 04 15");
+            cart = [];
+            localStorage.setItem('moto_market_cart', JSON.stringify(cart));
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        // 10. WORKSHOP SERVICE CATALOG & BOOKING
+        function renderServiceCatalog() {
+            const container = document.getElementById('servicePriceList');
+            container.innerHTML = SERVICE_PRICES.map(s => `
+                <div class="bg-moto-card border border-moto-border hover:border-moto-orange/50 rounded-2xl p-5 flex flex-col justify-between gap-3 transition">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-moto-orange/15 text-moto-orange flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid ${s.icon}"></i>
+                        </div>
+                        <span class="bg-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1 rounded-md">
+                            <i class="fa-regular fa-clock mr-1"></i>${s.duration}
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm sm:text-base">${s.name}</h4>
+                        <p class="text-xl font-black text-moto-orange mt-1">${s.price}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function submitServiceBooking(event) {
+            event.preventDefault();
+            const booking = {
+                id: Date.now(),
+                name: document.getElementById('bookName').value.trim(),
+                phone: document.getElementById('bookPhone').value.trim(),
+                bike: document.getElementById('bookBike').value.trim(),
+                service: document.getElementById('bookServiceType').value,
+                date: document.getElementById('bookDate').value,
+                time: document.getElementById('bookTime').value,
+                notes: document.getElementById('bookNotes').value.trim()
+            };
+
+            bookings.unshift(booking);
+            localStorage.setItem('moto_market_bookings', JSON.stringify(bookings));
+            updateAdminCount();
+            document.getElementById('serviceBookingForm').reset();
+            showToast("თქვენი ვიზიტი წარმატებით დაიჯავშნა სახელოსნოში!");
+        }
+
+        // 11. OWNER ADMIN PANEL
+        function toggleAdminPanel() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderAdminBookings();
+            }
+        }
+
+        function updateAdminCount() {
+            document.getElementById('adminBookingCount').textContent = bookings.length;
+        }
+
+        function renderAdminBookings() {
+            const list = document.getElementById('adminBookingsList');
+            if (bookings.length === 0) {
+                list.innerHTML = `<p class="text-sm text-slate-400">ჯერჯერობით დაჯავშნილი ვიზიტები არ არის.</p>`;
+                return;
+            }
+            list.innerHTML = bookings.map(b => `
+                <div class="bg-moto-dark border border-moto-border rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-white text-sm">${b.name}</span>
+                            <a href="tel:${b.phone}" class="text-xs bg-moto-orange/20 text-moto-orange px-2 py-0.5 rounded font-bold">${b.phone}</a>
+                            <span class="text-xs bg-slate-800 text-amber-400 px-2 py-0.5 rounded font-semibold">${b.bike}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 font-semibold">${b.service}</p>
+                        ${b.notes ? `<p class="text-xs text-slate-400 italic">"${b.notes}"</p>` : ''}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right text-xs">
+                            <div class="font-bold text-emerald-400">${b.date}</div>
+                            <div class="text-slate-400">საათი: ${b.time}</div>
+                        </div>
+                        <button onclick="deleteBooking(${b.id})" class="text-slate-400 hover:text-red-400 p-2">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteBooking(id) {
+            bookings = bookings.filter(b => b.id !== id);
+            localStorage.setItem('moto_market_bookings', JSON.stringify(bookings));
+            updateAdminCount();
+            renderAdminBookings();
+        }
+
+        // 12. TOAST NOTIFICATION
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
